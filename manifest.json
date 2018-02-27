@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+  "name": "Runzeit-Jira extension for Google Chrome",
+  "description": "Extension for Google Chrome that allows adding new Runzeit tasks directly from Jira",
+  "version": "0.1",
+  "browser_action": {
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "scripts": [
+      "actionTypes.js",
+      "bg.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://runze.it/*"
+      ],
+      "js": [
+        "actionTypes.js",
+        "runzeit.js"
+      ],
+      "run_at": "document_end"
+    }, {
+      "matches": [
+        "https://*.atlassian.net/browse/*"
+      ],
+      "js": [
+        "actionTypes.js",
+        "jira.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "storage",
+    "<all_urls>"
+  ]
+}
