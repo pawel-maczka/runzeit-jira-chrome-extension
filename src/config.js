@@ -14,3 +14,7 @@ const cfg = {
     },
   },
 };
+
+const api = {
+  addTask: 'http://api.runze.it/v1/tasks',
+};
