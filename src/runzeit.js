@@ -1,14 +1,25 @@
-chrome.runtime.onMessage.addListener(message => {
-  if (message.type === actionTypes.ADD_TASK) {
-    fetch('http://api.runze.it/v1/tasks', {
-      method: 'post',
-      headers: {
-        jwt: localStorage.getItem('jwt'),
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message.payload),
-    }).then(() => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (!message) {
+    return;
+  }
+
+  switch (message.type) {
+    case cfg.const.actionTypes.GET_TOKEN:
+      sendResponse(localStorage.getItem('jwt'));
+      break;
+    case cfg.const.actionTypes.RELOAD_PAGE:
       location.reload();
-    });
+      break;
+    default:
+      return;
   }
 });
+
+const token = localStorage.getItem('jwt');
+
+if (token) {
+  chrome.runtime.sendMessage({
+    type: cfg.const.actionTypes.SET_TOKEN,
+    payload: token,
+  });
+}

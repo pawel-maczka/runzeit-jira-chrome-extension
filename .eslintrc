@@ -2,7 +2,6 @@
   "extends": "brainhub",
   "globals": {
     "chrome": true,
-    "actionTypes": true,
-    "STORAGE_TOKEN": true
+    "cfg": true
   }
 }

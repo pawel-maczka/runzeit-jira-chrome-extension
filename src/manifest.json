@@ -8,7 +8,7 @@
   },
   "background": {
     "scripts": [
-      "actionTypes.js",
+      "config.js",
       "bg.js"
     ]
   },
@@ -18,7 +18,7 @@
         "http://runze.it/*"
       ],
       "js": [
-        "actionTypes.js",
+        "config.js",
         "runzeit.js"
       ],
       "run_at": "document_end"
@@ -27,7 +27,7 @@
         "https://*.atlassian.net/browse/*"
       ],
       "js": [
-        "actionTypes.js",
+        "config.js",
         "jira.js"
       ],
       "run_at": "document_end"
