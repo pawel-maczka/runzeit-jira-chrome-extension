@@ -1,5 +1,5 @@
 function Runzeit() {
-
+  this.token = null;
 }
 
 Runzeit.prototype.init = function() {
@@ -20,12 +20,12 @@ Runzeit.prototype.init = function() {
     }
   });
 
-  const token = localStorage.getItem('jwt');
+  this.token = localStorage.getItem('jwt');
 
-  if (token) {
+  if (this.token) {
     chrome.runtime.sendMessage({
       type: cfg.const.actionTypes.SET_TOKEN,
-      payload: token,
+      payload: this.token,
     });
   }
 };
