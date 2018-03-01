@@ -23,7 +23,7 @@ Background.prototype.init = function() {
 
 Background.prototype.addTask = function(task, sendResponse) {
   if (this.token) {
-    fetch('http://api.runze.it/v1/tasks', {
+    fetch(api.addTask, {
       method: 'post',
       headers: {
         jwt: this.token,

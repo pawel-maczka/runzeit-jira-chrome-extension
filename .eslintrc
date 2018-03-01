@@ -2,6 +2,7 @@
   "extends": "brainhub",
   "globals": {
     "chrome": true,
-    "cfg": true
+    "cfg": true,
+    "api": true
   }
 }
