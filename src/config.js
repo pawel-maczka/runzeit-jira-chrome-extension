@@ -2,6 +2,7 @@
 const cfg = {
   const: {
     TOKEN: 'runzeit-jira_token',
+    PROJECTS_MAPPING: 'runzeit-jira_projects-mapping',
     statuses: {
       SUCCESS: 'runzeit-jira/status/SUCCESS',
       FAILURE: 'runzeit-jira/status/FAILURE',
