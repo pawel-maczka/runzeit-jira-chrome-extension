@@ -28,8 +28,8 @@ Jira.prototype.addTask = function() {
 
   chrome.runtime.sendMessage({
     type: cfg.const.actionTypes.ADD_TASK, payload: {
-      project: { name: 'dmx' },
-      task: `${taskNumber} - ${summaryText}`,
+      summaryText,
+      taskNumber,
     },
   }, message => {
     if (!message) {

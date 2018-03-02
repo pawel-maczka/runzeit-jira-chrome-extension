@@ -1,6 +1,7 @@
 function Background() {
   this.token = null;
   this.timeout = null;
+  this.mapping = null;
 }
 
 Background.prototype.init = function() {
@@ -22,27 +23,65 @@ Background.prototype.init = function() {
 };
 
 Background.prototype.addTask = function(task, sendResponse) {
-  if (this.token) {
-    fetch(api.addTask, {
-      method: 'post',
-      headers: {
-        jwt: this.token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(task),
-    }).then(() => {
-      sendResponse({ status: cfg.const.statuses.SUCCESS });
-      chrome.tabs.query({ url: '*://*.runze.it/*' }, tabs => {
-        tabs.forEach(tab => {
-          chrome.tabs.sendMessage(tab.id, { type: cfg.const.actionTypes.RELOAD_PAGE });
+  this.getMapping().then(mapping => {
+    const projectName = this.getProject(task.taskNumber, mapping);
+
+    if (!projectName) {
+      alert('Could not parse project name. Please check your projects mappings in options and try again');
+      return false;
+    }
+
+    const requestBody = {
+      project: { name: projectName },
+      task: `${task.taskNumber} - ${task.summaryText}`,
+    };
+
+    if (this.token) {
+      fetch(api.addTask, {
+        method: 'post',
+        headers: {
+          jwt: this.token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      }).then(() => {
+        sendResponse({ status: cfg.const.statuses.SUCCESS });
+        chrome.tabs.query({ url: '*://*.runze.it/*' }, tabs => {
+          tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, { type: cfg.const.actionTypes.RELOAD_PAGE });
+          });
         });
       });
-    });
-  } else {
-    sendResponse({ status: cfg.const.statuses.FAILURE });
-  }
+    } else {
+      sendResponse({ status: cfg.const.statuses.FAILURE });
+    }
+  });
 
   return true;
+};
+
+Background.prototype.getProject = function(taskNumber, mapping) {
+  let projectName = null;
+
+  Object.entries(mapping).forEach(entry => {
+    if (taskNumber.includes(entry[1])) {
+      projectName = entry[0];
+    }
+  });
+
+  return projectName;
+};
+
+Background.prototype.getMapping = function() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(cfg.const.PROJECTS_MAPPING, data => {
+      if (data[cfg.const.PROJECTS_MAPPING]) {
+        resolve(JSON.parse(data[cfg.const.PROJECTS_MAPPING]));
+      } else {
+        reject();
+      }
+    });
+  });
 };
 
 Background.prototype.saveToken = function(token) {
